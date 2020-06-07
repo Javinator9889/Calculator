@@ -21,6 +21,18 @@ package com.javinator9889.calculator.containers
 import android.os.Parcel
 import android.os.Parcelable
 
+/**
+ * Data class that stores a button action and its value. In particular, this is how it works:
+ *  - the "action" represents the mathematical operation that can be understood by mXparser lib.
+ *  For example, the root is translated from '√' to "sqrt(".
+ *  - the "value" represents how the operation will be displayed on screen so the user is able
+ *  to understand it. For example, root is translated from '√' to '√(', as it needs parenthesis.
+ *  In addition, this class implements the Parcelable implementation so it can be written and
+ *  recovered from both disk and memory.
+ *
+ *  @param action how the operation is represented in mXparser.
+ *  @param value how the operation is represented on screen.
+ */
 data class ButtonAction(val action: CharSequence, val value: CharSequence) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,

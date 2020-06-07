@@ -18,6 +18,9 @@
  */
 package com.javinator9889.calculator.utils
 
+/**
+ * Safely removes the last item from a mutable list
+ */
 fun <T> MutableList<T>.removeLast() {
     if (!isEmpty())
         removeAt(lastIndex)

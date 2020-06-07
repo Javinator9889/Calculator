@@ -14,13 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 5/06/20 - Calculator.
+ * Created by Javinator9889 on 7/06/20 - Calculator.
  */
-package com.javinator9889.calculator.models.viewmodels
+package com.javinator9889.calculator.models.viewmodels.factory
 
+import android.os.Bundle
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.savedstate.SavedStateRegistryOwner
 
-interface ViewModelAssistedFactory<T : ViewModel> {
-    fun create(handle: SavedStateHandle): T
+@Suppress("UNCHECKED_CAST")
+class ViewModelFactory<out V : ViewModel>(
+    private val viewModelFactory: ViewModelAssistedFactory<V>,
+    owner: SavedStateRegistryOwner,
+    defaultArgs: Bundle? = null
+) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+    override fun <T : ViewModel> create(
+        key: String,
+        modelClass: Class<T>,
+        handle: SavedStateHandle
+    ): T = viewModelFactory.create(handle) as T
 }

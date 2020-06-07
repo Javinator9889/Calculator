@@ -38,6 +38,25 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
+/**
+ * Class that binds the buttons appearing on calculator's UI to the onClick listener.
+ *
+ * When created, it is attached and linked to the lifecycle scope (for avoiding possible memory
+ * leaks) and recursively finds all the childs present in the main UI container.
+ * Once they are found, by using the 'buttonActions' SparseArray maps their ID to their action/value.
+ *
+ * Finally, attaches each child to the onClick listener for updating the view model data.
+ *
+ * @param container the main UI root container.
+ * @param model the view model which is being used for storing the app's logic.
+ * @param lifecycleOwner the lifecycle at which this binder is attached to.
+ * @param vibrationService the vibrator service which makes the buttons vibrate when pressed.
+ *
+ * @see ButtonBinder.onClick
+ * @see CalculatorViewModel
+ * @see ButtonAction
+ * @see SparseArray
+ */
 class ButtonBinder(
     container: ConstraintLayout,
     model: CalculatorViewModel,

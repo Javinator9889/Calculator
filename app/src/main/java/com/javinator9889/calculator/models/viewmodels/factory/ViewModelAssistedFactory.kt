@@ -16,25 +16,14 @@
  *
  * Created by Javinator9889 on 5/06/20 - Calculator.
  */
-package com.javinator9889.calculator.models.viewmodels.calculator
+package com.javinator9889.calculator.models.viewmodels.factory
 
-import android.os.Bundle
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.savedstate.SavedStateRegistryOwner
-import com.javinator9889.calculator.models.viewmodels.ViewModelAssistedFactory
 
-class CalculatorViewModelAssistedFactory<out V : ViewModel>(
-    private val viewModelFactory: ViewModelAssistedFactory<V>,
-    owner: SavedStateRegistryOwner,
-    defaultArgs: Bundle? = null
-) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(
-        key: String,
-        modelClass: Class<T>,
-        handle: SavedStateHandle
-    ): T = viewModelFactory.create(handle) as T
+/**
+ * Interface that view models that may want to use a SavedStateHandle property must use.
+ */
+interface ViewModelAssistedFactory<T : ViewModel> {
+    fun create(handle: SavedStateHandle): T
 }

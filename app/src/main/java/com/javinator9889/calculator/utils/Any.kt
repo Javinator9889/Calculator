@@ -18,6 +18,10 @@
  */
 package com.javinator9889.calculator.utils
 
+/**
+ * If the running variable is not null, runs the code specified in 'f'
+ * @param f the code to be run if 'T' is not null.
+ */
 fun <T : Any> T?.notNull(f: (it: T) -> Unit) {
     if (this != null) f(this)
 }

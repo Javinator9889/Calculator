@@ -21,6 +21,7 @@ package com.javinator9889.calculator.models.viewmodels.calculator
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.*
 import com.javinator9889.calculator.containers.ButtonAction
+import com.javinator9889.calculator.models.viewmodels.factory.ViewModelAssistedFactory
 import com.javinator9889.calculator.utils.removeLast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -124,5 +125,9 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
             Timber.d("Is valid?: ${checkSyntax()}")
             checkSyntax()
         }
+    }
+
+    companion object Factory : ViewModelAssistedFactory<CalculatorViewModel> {
+        override fun create(handle: SavedStateHandle) = CalculatorViewModel(handle)
     }
 }

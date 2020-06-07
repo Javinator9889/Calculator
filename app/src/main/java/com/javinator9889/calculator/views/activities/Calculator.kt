@@ -31,8 +31,7 @@ import androidx.lifecycle.whenCreated
 import com.javinator9889.calculator.R
 import com.javinator9889.calculator.models.ButtonBinder
 import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
-import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModelAssistedFactory
-import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModelFactory
+import com.javinator9889.calculator.models.viewmodels.factory.ViewModelFactory
 import kotlinx.android.synthetic.main.calc_layout.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,9 +65,8 @@ internal const val ARG_CURRENT_RESULT_TEXT = "args:calculator:operation_result"
  */
 class Calculator : AppCompatActivity() {
     private lateinit var binder: ButtonBinder
-    private val calculatorFactory = CalculatorViewModelFactory()
     private val calculatorViewModel: CalculatorViewModel by viewModels {
-        CalculatorViewModelAssistedFactory(calculatorFactory, this)
+        ViewModelFactory(CalculatorViewModel.Factory, this)
     }
 
     init {

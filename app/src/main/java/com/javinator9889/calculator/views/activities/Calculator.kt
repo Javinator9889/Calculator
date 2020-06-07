@@ -19,34 +19,58 @@
 package com.javinator9889.calculator.views.activities
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.text.method.ScrollingMovementMethod
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
 import com.javinator9889.calculator.R
 import com.javinator9889.calculator.models.ButtonBinder
 import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
-import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModelAssistedFactory
-import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModelFactory
+import com.javinator9889.calculator.models.viewmodels.factory.ViewModelFactory
+import com.javinator9889.calculator.views.activities.base.ActionBarBase
 import kotlinx.android.synthetic.main.calc_layout.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+/**
+ * Bundle key for saving the current displayed operation text
+ */
 internal const val ARG_OPERATION_TEXT = "args:calculator:operation_text"
+
+/**
+ * Bundle key for saving the current displayed operation result
+ */
 internal const val ARG_CURRENT_RESULT_TEXT = "args:calculator:operation_result"
 
 
-class Calculator : AppCompatActivity() {
+/**
+ * Main application activity. This class encapsulates the behaviour that must be shown
+ * to the users. It consists on some different parts:
+ *  - The {@link com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel CalculatorViewModel}
+ *  which contains the application logic: it has relationships between buttons and actions that must
+ *  take place.
+ *  - The LifecycleScope part, responsible for launching coroutines for managing the input data and
+ *  elements of the UI.
+ *
+ * When the activity is created, it waits until the lifecycle status has reached the CREATED one
+ * before initializing some variables (such as {@literal lateinit var binder}) and start observing
+ * the view models' live data.
+ *
+ * @see com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
+ */
+class Calculator : ActionBarBase() {
+    override val layoutId: Int = R.layout.calc_layout
+    override val menuRes: Int = R.menu.app_menu
     private lateinit var binder: ButtonBinder
-    private val calculatorFactory = CalculatorViewModelFactory()
     private val calculatorViewModel: CalculatorViewModel by viewModels {
-        CalculatorViewModelAssistedFactory(calculatorFactory, this)
+        ViewModelFactory(CalculatorViewModel.Factory, this)
     }
 
     init {
@@ -56,6 +80,10 @@ class Calculator : AppCompatActivity() {
                     Timber.d("COP updated - $it")
                     operation.setText(it)
                     operation.setSelection(operation.length())
+                    if (it != "")
+                        operation.requestFocus()
+                    else
+                        operation.clearFocus()
                 })
                 calculatorViewModel.operationResult.observe(this@Calculator, Observer {
                     Timber.d("OP result updated - $it")
@@ -94,15 +122,16 @@ class Calculator : AppCompatActivity() {
                 operation.movementMethod = ScrollingMovementMethod()
                 operation.setSelection(0)
                 operation.error = null
+                disableEditTextKeyboard()
+                operation.isCursorVisible = true
+                operation.requestFocus()
             }
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.calc_layout)
-    }
-
+    /**
+     * @inheritDoc
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Timber.d("Saving instance - data: ${calculatorViewModel.currentOperation.value}")
@@ -110,6 +139,9 @@ class Calculator : AppCompatActivity() {
         outState.putCharSequence(ARG_CURRENT_RESULT_TEXT, currentResult.text)
     }
 
+    /**
+     * @inheritDoc
+     */
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         Timber.d("Restoring instance - op: ${savedInstanceState.getCharSequence(ARG_OPERATION_TEXT)}")
@@ -118,8 +150,19 @@ class Calculator : AppCompatActivity() {
         operation.setSelection(0)
     }
 
+    /**
+     * @inheritDoc
+     */
     override fun finish() {
         super.finish()
         calculatorViewModel.finish()
+    }
+
+    private fun disableEditTextKeyboard() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            operation.showSoftInputOnFocus = false
+        else with(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {
+            hideSoftInputFromWindow(operation.windowToken, 0)
+        }
     }
 }

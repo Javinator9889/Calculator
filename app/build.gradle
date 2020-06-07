@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 def secretsPropertiesFile = rootProject.file("secrets.properties")
 def secretProperties = new Properties()
@@ -16,16 +17,18 @@ else {
 
 
 android {
-    viewBinding.enabled = true
+    viewBinding {
+        enabled = true
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.javinator9889.calculator"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 29
-        versionCode 8
-        versionName "1.0.2"
+        versionCode 10
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -89,6 +92,10 @@ dependencies {
 
     // https://material.io/develop/android/docs/getting-started/
     implementation 'com.google.android.material:material:1.1.0'
+    // https://developer.android.com/jetpack/androidx/releases/cardview
+    implementation 'androidx.cardview:cardview:1.0.0'
+    // https://developer.android.com/jetpack/androidx/releases/recyclerview
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     // https://developer.android.com/jetpack/androidx/releases/annotation
     implementation 'androidx.annotation:annotation:1.1.0'
     // https://developer.android.com/kotlin/ktx#collection
@@ -105,6 +112,9 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
     // https://developer.android.com/jetpack/androidx/releases/lifecycle#declaring_dependencies
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0'
-    // https://github.com/mariuszgromada/MathParser.org-mXparser
+    // https://mvnrepository.com/artifact/org.mariuszgromada.math/MathParser.org-mXparser
     implementation group: 'org.mariuszgromada.math', name: 'MathParser.org-mXparser', version: '4.4.2'
+    // https://github.com/mikepenz/AboutLibraries
+    implementation "com.mikepenz:aboutlibraries-core:${latestAboutLibsRelease}"
+    implementation "com.mikepenz:aboutlibraries:${latestAboutLibsRelease}"
 }

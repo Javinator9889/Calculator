@@ -1,0 +1,42 @@
+/*
+ * Copyright © 2020 - present | Calculator by Javinator9889
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
+ *
+ * Created by Javinator9889 on 5/06/20 - Calculator.
+ */
+package com.javinator9889.calculator.containers
+
+import android.os.Parcel
+import android.os.Parcelable
+
+data class ButtonAction(val action: CharSequence, val value: CharSequence) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString()!!,
+        parcel.readString()!!
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(action.toString())
+        parcel.writeString(value.toString())
+    }
+
+    override fun describeContents() = 0
+
+    companion object CREATOR : Parcelable.Creator<ButtonAction> {
+        override fun createFromParcel(parcel: Parcel) = ButtonAction(parcel)
+
+        override fun newArray(size: Int) = arrayOfNulls<ButtonAction>(size)
+    }
+}

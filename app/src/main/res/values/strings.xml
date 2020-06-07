@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Calculator</string>
+    <string name="operation">Operation…</string>
+    <string name="error_expression">Error in expression</string>
+</resources>

@@ -15,3 +15,6 @@
 
 # Keystore secrets file
 secrets.properties
+
+# google services JSON
+app/google-services.json

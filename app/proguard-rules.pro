@@ -22,3 +22,8 @@
 #-renamesourcefileattribute SourceFile
 
 -optimizationpasses 4
+
+-keep class .R
+-keep class **.R$* {
+    <fields>;
+}

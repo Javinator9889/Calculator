@@ -27,8 +27,8 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.javinator9889.calculator.R
-import com.mikepenz.aboutlibraries.LibsBuilder
 
 abstract class ActionBarBase : AppCompatActivity() {
     @get:LayoutRes
@@ -56,17 +56,10 @@ abstract class ActionBarBase : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        OssLicensesMenuActivity.setActivityTitle(getString(R.string.app_name))
         return when (item.itemId) {
-            R.id.libs -> with(LibsBuilder()) {
-                withAboutIconShown(true)
-                withCheckCachedDetection(true)
-                withSortEnabled(true)
-                withAboutVersionShown(true)
-                withAboutVersionShownCode(true)
-                withAboutVersionShownName(true)
-                withShowLoadingProgress(true)
-                withActivityTitle(getString(R.string.app_name))
-                start(this@ActionBarBase)
+            R.id.libs -> with(Intent(this, OssLicensesMenuActivity::class.java)) {
+                startActivity(this)
                 true
             }
             R.id.github -> {

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 def secretsPropertiesFile = rootProject.file("secrets.properties")
 def secretProperties = new Properties()
@@ -27,7 +27,7 @@ android {
         applicationId "com.javinator9889.calculator"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 10
+        versionCode 11
         versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -92,10 +92,6 @@ dependencies {
 
     // https://material.io/develop/android/docs/getting-started/
     implementation 'com.google.android.material:material:1.1.0'
-    // https://developer.android.com/jetpack/androidx/releases/cardview
-    implementation 'androidx.cardview:cardview:1.0.0'
-    // https://developer.android.com/jetpack/androidx/releases/recyclerview
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     // https://developer.android.com/jetpack/androidx/releases/annotation
     implementation 'androidx.annotation:annotation:1.1.0'
     // https://developer.android.com/kotlin/ktx#collection
@@ -113,8 +109,7 @@ dependencies {
     // https://developer.android.com/jetpack/androidx/releases/lifecycle#declaring_dependencies
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0'
     // https://mvnrepository.com/artifact/org.mariuszgromada.math/MathParser.org-mXparser
-    implementation group: 'org.mariuszgromada.math', name: 'MathParser.org-mXparser', version: '4.4.2'
-    // https://github.com/mikepenz/AboutLibraries
-    implementation "com.mikepenz:aboutlibraries-core:${latestAboutLibsRelease}"
-    implementation "com.mikepenz:aboutlibraries:${latestAboutLibsRelease}"
+    implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.4.2'
+    // https://developers.google.com/android/guides/opensource
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 }

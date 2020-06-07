@@ -22,6 +22,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import timber.log.Timber
 
+/**
+ * Custom Timber tree for only logging both warn and error messages
+ */
 class CrashReportingTree : Timber.Tree() {
     @SuppressLint("LogNotTimber")
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {

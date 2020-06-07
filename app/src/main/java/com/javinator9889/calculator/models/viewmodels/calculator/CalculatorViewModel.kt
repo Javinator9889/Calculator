@@ -36,6 +36,30 @@ internal const val ARG_EQUALS = "args:calculator:equals_button"
 internal const val ARG_OPERATOR = "args:calculator:operator_live_data"
 
 
+/**
+ * The calculator's view model. This class is the responsible for calculating and synchronizing
+ * the user actions with the output information. By using the ViewModel, which has its own lifecycle
+ * and does not change across UI updates, it is possible to have it attached to the main UI and work
+ * even if the user changes orientation or swaps activities.
+ * In particular, this is achieved thanks to ViewModel itself and {@link SavedStateHandle} class,
+ * which allows the developer to store more complex data into device memory by using, for example,
+ * the Parcelable class.
+ * When started, it creates the public live data (operationResult, currentOperation, equalsResult
+ * and operatorLiveData) and offers them to the rest of the application. In addition, it starts
+ * observing the "operatorLiveData" for detecting changes in the user input (when the user presses
+ * a button, that live data is updated with the correspondent action and value).
+ * Finally, as it is observing forever the data-source, it must be notified whether it has to stop
+ * observing for avoiding memory leaks (see {@link #finish()}).
+ *
+ * @param savedStateHandle the state handler for storing custom properties.
+ *
+ * @see CalculatorViewModel.finish
+ * @see SavedStateHandle
+ * @see ViewModel
+ * @see operatorLiveData
+ * @see ButtonAction
+ * @see Observer
+ */
 class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
     val operationResult: MutableLiveData<String> = savedStateHandle.getLiveData(ARG_RESULT, "")
     val currentOperation: MutableLiveData<String> = savedStateHandle.getLiveData(ARG_COP, "")
@@ -86,6 +110,9 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
         }
     }
 
+    /**
+     * Notifies the view model that it must stop observing for data changes.
+     */
     fun finish() {
         operatorLiveData.removeObserver(observer)
     }
@@ -127,7 +154,14 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
         }
     }
 
+    /**
+     * Factory object that implements the ViewModelAssistedFactory interface for creating
+     * a custom ViewModel by using the lazy initialization method.
+     */
     companion object Factory : ViewModelAssistedFactory<CalculatorViewModel> {
+        /**
+         * @inheritDoc
+         */
         override fun create(handle: SavedStateHandle) = CalculatorViewModel(handle)
     }
 }

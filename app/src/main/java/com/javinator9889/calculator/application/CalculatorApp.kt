@@ -23,7 +23,14 @@ import com.javinator9889.calculator.BuildConfig
 import com.javinator9889.calculator.logger.CrashReportingTree
 import timber.log.Timber
 
+/**
+ * Custom implementation of the application for using custom logging whether the build
+ * is debug one or not.
+ */
 class CalculatorApp : Application() {
+    /**
+     * @inheritDoc
+     */
     override fun onCreate() {
         super.onCreate()
 

@@ -38,10 +38,32 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+/**
+ * Bundle key for saving the current displayed operation text
+ */
 internal const val ARG_OPERATION_TEXT = "args:calculator:operation_text"
+
+/**
+ * Bundle key for saving the current displayed operation result
+ */
 internal const val ARG_CURRENT_RESULT_TEXT = "args:calculator:operation_result"
 
 
+/**
+ * Main application activity. This class encapsulates the behaviour that must be shown
+ * to the users. It consists on some different parts:
+ *  - The {@link com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel CalculatorViewModel}
+ *  which contains the application logic: it has relationships between buttons and actions that must
+ *  take place.
+ *  - The LifecycleScope part, responsible for launching coroutines for managing the input data and
+ *  elements of the UI.
+ *
+ * When the activity is created, it waits until the lifecycle status has reached the CREATED one
+ * before initializing some variables (such as {@literal lateinit var binder}) and start observing
+ * the view models' live data.
+ *
+ * @see com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
+ */
 class Calculator : AppCompatActivity() {
     private lateinit var binder: ButtonBinder
     private val calculatorFactory = CalculatorViewModelFactory()
@@ -98,11 +120,17 @@ class Calculator : AppCompatActivity() {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.calc_layout)
     }
 
+    /**
+     * @inheritDoc
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Timber.d("Saving instance - data: ${calculatorViewModel.currentOperation.value}")
@@ -110,6 +138,9 @@ class Calculator : AppCompatActivity() {
         outState.putCharSequence(ARG_CURRENT_RESULT_TEXT, currentResult.text)
     }
 
+    /**
+     * @inheritDoc
+     */
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         Timber.d("Restoring instance - op: ${savedInstanceState.getCharSequence(ARG_OPERATION_TEXT)}")
@@ -118,6 +149,9 @@ class Calculator : AppCompatActivity() {
         operation.setSelection(0)
     }
 
+    /**
+     * @inheritDoc
+     */
     override fun finish() {
         super.finish()
         calculatorViewModel.finish()

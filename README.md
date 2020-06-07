@@ -19,4 +19,8 @@ one. If you would like to generate the APK for the latest one, keep in mind that
 signing key.
 
 ### Download the application
-If you would like to install and use the application, download it from Gitlab releases
+If you would like to install and use the application, download it from Gitlab releases, available here:
+
+https://gitlab.javinator9889.com/Javinator9889/calculator/-/releases
+
+or download from Play Store:

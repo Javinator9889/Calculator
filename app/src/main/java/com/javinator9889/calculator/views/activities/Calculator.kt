@@ -161,9 +161,8 @@ class Calculator : ActionBarBase() {
     private fun disableEditTextKeyboard() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             operation.showSoftInputOnFocus = false
-        else
-            with(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {
-                hideSoftInputFromWindow(operation.windowToken, 0)
-            }
+        else with(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {
+            hideSoftInputFromWindow(operation.windowToken, 0)
+        }
     }
 }

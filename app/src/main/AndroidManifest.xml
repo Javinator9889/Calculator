@@ -3,6 +3,9 @@
     package="com.javinator9889.calculator">
     <!-- For vibrating on button click -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- FA permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".application.CalculatorApp"

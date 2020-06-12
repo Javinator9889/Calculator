@@ -27,7 +27,7 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+//import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.javinator9889.calculator.R
 
 abstract class ActionBarBase : AppCompatActivity() {
@@ -56,12 +56,12 @@ abstract class ActionBarBase : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        OssLicensesMenuActivity.setActivityTitle(getString(R.string.app_name))
+//        OssLicensesMenuActivity.setActivityTitle(getString(R.string.app_name))
         return when (item.itemId) {
-            R.id.libs -> with(Intent(this, OssLicensesMenuActivity::class.java)) {
+            /*R.id.libs -> with(Intent(this, OssLicensesMenuActivity::class.java)) {
                 startActivity(this)
                 true
-            }
+            }*/
             R.id.github -> {
                 val website = Uri.parse("https://gitlab.javinator9889.com/Javinator9889/calculator")
                 with(Intent(Intent.ACTION_VIEW, website)) {

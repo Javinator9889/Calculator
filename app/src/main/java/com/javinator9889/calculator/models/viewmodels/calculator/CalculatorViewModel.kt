@@ -22,6 +22,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.*
 import com.javinator9889.calculator.containers.ButtonAction
 import com.javinator9889.calculator.models.viewmodels.factory.ViewModelAssistedFactory
+import com.javinator9889.calculator.utils.Calculator
 import com.javinator9889.calculator.utils.removeLast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -129,8 +130,8 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
             withContext(Dispatchers.Main) {
                 currentOperation.value = operation.toString()
             }
-            with(Expression(expression.toString())) {
-                var calcResult = calculate().toString()
+            with(Calculator.evaluate(expression.toString())) {
+                var calcResult = this.toString()
                 if (calcResult.endsWith(".0"))
                     calcResult = calcResult.removeSuffix(".0")
                 withContext(Dispatchers.Main) {
@@ -138,6 +139,15 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
                 }
                 savedStateHandle.set(ARG_RESULT, calcResult)
             }
+            /*with(Expression(expression.toString())) {
+                var calcResult = calculate().toString()
+                if (calcResult.endsWith(".0"))
+                    calcResult = calcResult.removeSuffix(".0")
+                withContext(Dispatchers.Main) {
+                    operationResult.value = calcResult
+                }
+                savedStateHandle.set(ARG_RESULT, calcResult)
+            }*/
             savedStateHandle.set(ARG_COP, operation.toString())
         }
     }

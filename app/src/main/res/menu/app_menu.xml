@@ -3,16 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/libs"
-        android:checkable="false"
-        android:contentDescription="@string/libs"
-        android:enabled="true"
-        android:icon="@drawable/ic_library_books"
-        android:title="@string/libs"
-        android:visible="true"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/github"
         android:checkable="false"
         android:contentDescription="@string/github"

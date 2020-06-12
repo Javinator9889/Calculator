@@ -27,7 +27,9 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import com.javinator9889.calculator.R
+import com.javinator9889.calculator.utils.dpToPixel
 
 abstract class ActionBarBase : AppCompatActivity() {
     @get:LayoutRes
@@ -40,6 +42,7 @@ abstract class ActionBarBase : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
         setSupportActionBar(findViewById(R.id.topAppBar))
+        ViewCompat.setElevation(findViewById(R.id.topAppBar), dpToPixel(2F, this))
     }
 
     override fun onSupportNavigateUp(): Boolean {

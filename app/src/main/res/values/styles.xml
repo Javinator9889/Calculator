@@ -1,22 +1,22 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="CalcButton" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="CalcButton" parent="TextAppearance.AppCompat.Widget.Button.Borderless.Colored">
         <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
         <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">#000000</item>
         <item name="android:gravity">center|center_vertical|center_horizontal</item>
-        <item name="rippleColor">@android:color/black</item>
+        <!--        <item name="rippleColor">@android:color/black</item>-->
     </style>
 
-    <style name="CalcText" parent="Widget.MaterialComponents.TextView">
+    <style name="CalcText" parent="Widget.AppCompat.TextView">
         <item name="android:gravity">center_vertical|end</item>
         <item name="android:maxLines">1</item>
         <item name="android:singleLine">true</item>
@@ -25,14 +25,14 @@
     <style name="CalcOperationButton" parent="@style/CalcButton">
         <item name="background">@color/colorPrimary</item>
         <item name="android:background">@color/colorPrimary</item>
-        <item name="rippleColor">@android:color/black</item>
+        <!--        <item name="rippleColor">@android:color/black</item>-->
     </style>
 
     <style name="OperationButton">
         <item name="colorPrimary">@color/colorPrimary</item>
     </style>
 
-    <style name="actionBarTheme" parent="ThemeOverlay.MaterialComponents.ActionBar">
+    <style name="actionBarTheme" parent="Widget.AppCompat.Light.ActionBar">
         <item name="android:fontFamily">@font/roboto</item>
         <item name="titleTextColor">#000000</item>
         <item name="android:textColor">#000000</item>

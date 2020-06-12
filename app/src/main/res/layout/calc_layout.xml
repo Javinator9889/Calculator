@@ -5,31 +5,25 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".views.activities.Calculator">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/barLayout"
-        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/topAppBar"
+        style="@style/actionBarTheme"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
+        app:layout_constraintBottom_toTopOf="@+id/operation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/app_menu"
+        app:title="@string/app_name" />
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
-            style="@style/actionBarTheme"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/app_menu"
-            app:title="@string/app_name" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <EditText
+        android:id="@+id/operation"
+        style="@style/CalcText"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginStart="16dp"
@@ -37,32 +31,23 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:background="@android:color/transparent"
+        android:clickable="false"
+        android:cursorVisible="true"
+        android:focusable="true"
+        android:fontFamily="@font/roboto"
+        android:gravity="center_vertical|end"
+        android:hint="@string/operation"
+        android:inputType="none"
+        android:textSize="40sp"
         app:autoSizeTextType="uniform"
-        app:boxStrokeWidth="0dp"
-        app:errorEnabled="true"
         app:layout_constraintBottom_toTopOf="@+id/currentResult"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barLayout">
+        app:layout_constraintTop_toBottomOf="@+id/topAppBar"
+        tools:text="here will be the current operation" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/operation"
-            style="@style/CalcText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="false"
-            android:cursorVisible="true"
-            android:background="@android:color/transparent"
-            android:focusable="true"
-            android:gravity="center_vertical|end"
-            android:hint="@string/operation"
-            android:inputType="none"
-            android:textSize="40sp"
-            android:fontFamily="@font/roboto"
-            tools:text="here will be the current operation" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:id="@+id/currentResult"
         style="@style/CalcText"
         android:layout_width="match_parent"
@@ -78,7 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/operation"
         tools:text="here will be the current result" />
 
     <LinearLayout
@@ -100,7 +85,7 @@
             android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_percent"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -113,10 +98,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_power"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_power"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -127,10 +111,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_root"
                 app:layout_constraintStart_toEndOf="@+id/btn_percent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_root"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -141,10 +124,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_clear"
                 app:layout_constraintStart_toEndOf="@+id/btn_power"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_clear"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -155,10 +137,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_reset"
                 app:layout_constraintStart_toEndOf="@+id/btn_root"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_reset"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -172,8 +153,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_clear"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -183,7 +163,7 @@
             android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_ln"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -196,10 +176,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_log"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_log"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -210,10 +189,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_fact"
                 app:layout_constraintStart_toEndOf="@+id/btn_ln"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_fact"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -224,10 +202,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_obrkt"
                 app:layout_constraintStart_toEndOf="@+id/btn_log"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_obrkt"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -238,10 +215,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_cbrkt"
                 app:layout_constraintStart_toEndOf="@+id/btn_fact"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_cbrkt"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -254,8 +230,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_obrkt"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -265,7 +240,7 @@
             android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_sin"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -278,10 +253,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_cos"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_cos"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -292,10 +266,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_tan"
                 app:layout_constraintStart_toEndOf="@+id/btn_sin"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_tan"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -306,10 +279,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_pi"
                 app:layout_constraintStart_toEndOf="@+id/btn_cos"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_pi"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -320,10 +292,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_e"
                 app:layout_constraintStart_toEndOf="@+id/btn_tan"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_e"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -336,8 +307,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_pi"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@android:color/black" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -346,7 +316,7 @@
             android:layout_weight="2"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_7"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -360,7 +330,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_8"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -372,7 +342,7 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_7"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_9"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -384,7 +354,7 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_8"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_divide"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -405,7 +375,7 @@
             android:layout_weight="2"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_4"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -419,7 +389,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_5"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -431,7 +401,7 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_4"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_6"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -443,7 +413,7 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_5"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_multiply"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -464,7 +434,7 @@
             android:layout_weight="2"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_1"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -478,7 +448,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_2"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -490,7 +460,7 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_1"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_3"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -502,7 +472,7 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_2"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_minus"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -523,7 +493,7 @@
             android:layout_weight="2"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_0"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -537,7 +507,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_decimal"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -550,7 +520,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_equals"
                 style="@style/CalcButton"
                 android:layout_width="0dp"
@@ -562,7 +532,7 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_decimal"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_plus"
                 style="@style/CalcButton"
                 android:layout_width="0dp"

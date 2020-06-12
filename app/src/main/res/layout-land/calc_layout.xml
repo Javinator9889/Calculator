@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/topAppBar">
 
 
-        <EditText
+        <com.javinator9889.calculator.views.widgets.CalculatorEditText
             android:id="@+id/operation"
             style="@style/CalcText"
             android:layout_width="match_parent"
@@ -48,9 +48,10 @@
             android:fontFamily="@font/roboto"
             android:gravity="center_vertical|end"
             android:hint="@string/operation"
-            android:inputType="none"
+            android:inputType="text|textNoSuggestions"
             android:minHeight="75dp"
-            android:textSize="24sp"
+            android:textColor="@color/display_formula_text_color"
+            android:textSize="32sp"
             app:layout_constraintBottom_toTopOf="@+id/currentResult"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +59,7 @@
             tools:text="here will be the current operation" />
 
 
-        <TextView
+        <com.javinator9889.calculator.views.widgets.CalculatorEditText
             android:id="@+id/currentResult"
             style="@style/CalcText"
             android:layout_width="match_parent"

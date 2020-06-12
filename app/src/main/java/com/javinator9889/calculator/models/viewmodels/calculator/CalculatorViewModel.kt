@@ -27,7 +27,6 @@ import com.javinator9889.calculator.utils.removeLast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.mariuszgromada.math.mxparser.Expression
 import timber.log.Timber
 
 internal const val ARG_OPERANDS = "args:calculator:operands"
@@ -131,7 +130,7 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
                 currentOperation.value = operation.toString()
             }
             with(Calculator.evaluate(expression.toString())) {
-                var calcResult = this.toString()
+                var calcResult = this
                 if (calcResult.endsWith(".0"))
                     calcResult = calcResult.removeSuffix(".0")
                 withContext(Dispatchers.Main) {
@@ -139,15 +138,6 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
                 }
                 savedStateHandle.set(ARG_RESULT, calcResult)
             }
-            /*with(Expression(expression.toString())) {
-                var calcResult = calculate().toString()
-                if (calcResult.endsWith(".0"))
-                    calcResult = calcResult.removeSuffix(".0")
-                withContext(Dispatchers.Main) {
-                    operationResult.value = calcResult
-                }
-                savedStateHandle.set(ARG_RESULT, calcResult)
-            }*/
             savedStateHandle.set(ARG_COP, operation.toString())
         }
     }
@@ -158,10 +148,7 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
             expression.append(operand.action)
         }
         Timber.d("Expression: $expression")
-        return with(Expression(expression.toString())) {
-            Timber.d("Is valid?: ${checkSyntax()}")
-            checkSyntax()
-        }
+        return Calculator.isValid(expression.toString())
     }
 
     /**

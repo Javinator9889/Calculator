@@ -25,7 +25,6 @@ import android.os.Vibrator
 import android.text.method.ScrollingMovementMethod
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
@@ -33,6 +32,7 @@ import com.javinator9889.calculator.R
 import com.javinator9889.calculator.models.ButtonBinder
 import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
 import com.javinator9889.calculator.models.viewmodels.factory.ViewModelFactory
+import com.javinator9889.calculator.utils.viewModels
 import com.javinator9889.calculator.views.activities.base.ActionBarBase
 import kotlinx.android.synthetic.main.calc_layout.*
 import kotlinx.coroutines.Dispatchers

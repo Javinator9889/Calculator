@@ -18,11 +18,36 @@
  */
 package com.javinator9889.calculator.utils
 
+import org.javia.arity.Symbols
+import org.javia.arity.SyntaxException
+import org.javia.arity.Util
+
+internal const val MAX_DIGITS = 12;
+internal const val ROUNDING_DIGITS = 5;
 
 object Calculator {
-    init {
-        System.loadLibrary("exprtk-lib")
+    fun evaluate(input: String): String {
+        val symbols = Symbols()
+        var expression = input
+        while (expression.isNotEmpty() && "+-/*".indexOf(expression[expression.lastIndex]) != -1)
+            expression = expression.substring(0, expression.lastIndex)
+        try {
+            val result = symbols.eval(expression)
+            if (result.isNaN())
+                return "NaN"
+            return Util.doubleToString(result, MAX_DIGITS, ROUNDING_DIGITS);
+        } catch (e: SyntaxException) {
+            return "NaN"
+        }
     }
 
-    external fun evaluate(input: String): Double
+    fun isValid(input: String): Boolean {
+        val symbols = Symbols()
+        return try {
+            symbols.eval(input)
+            true
+        } catch (_: SyntaxException) {
+            false
+        }
+    }
 }

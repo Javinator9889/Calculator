@@ -27,7 +27,6 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
-//import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.javinator9889.calculator.R
 
 abstract class ActionBarBase : AppCompatActivity() {

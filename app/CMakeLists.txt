@@ -4,6 +4,8 @@
 # Sets the minimum version of CMake required to build the native library.
 
 cmake_minimum_required(VERSION 3.4.1)
+set(CMAKE_CXX_STANDARD 14)
+#include(src/main/cpp/mathpresso/CMakeLists.txt)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -18,6 +20,16 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         src/main/cpp/exprtk.cpp)
+add_library(
+        tinyexpr-lib
+        SHARED
+        src/main/cpp/tinyexpr/tinyexpr.c
+)
+add_library(
+        fparser-lib
+        SHARED
+        src/main/cpp/fparser/fparser.cc
+)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -38,6 +50,8 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries( # Specifies the target library.
         exprtk-lib
+        tinyexpr-lib
+        fparser-lib
 
         # Links the target library to the log library
         # included in the NDK.
@@ -46,7 +60,7 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif ()
 
-set(CMAKE_CXX_FLAGS "-pedantic-errors -Wall -Wextra -Werror -Wno-long-long -Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS "-pedantic-errors -Werror -Wall -Wextra -Wno-long-long -Wno-unused-parameter -ansi")
 set(CMAKE_CXX_FLAGS_RELEASE "-fdata-sections -ffunction-sections -O2")
 set(CMAKE_EXE_LINKER_FLAGS "-L/usr/lib -lstdc++ -lm -Wl,--gc-sections")
 

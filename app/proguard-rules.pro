@@ -14,7 +14,11 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
--keepattributes *Annotation*
+# -keepattributes *Annotation*
+# -keepattributes SourceFile,LineNumberTable
+-printmapping out.map
+
+-renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
@@ -22,8 +26,41 @@
 #-renamesourcefileattribute SourceFile
 
 -optimizationpasses 4
+-repackageclasses ''
+-allowaccessmodification
+-android
+-dontpreverify
+#-optimizations !code/simplification/arithmetic
 
--keep class .R
--keep class **.R$* {
-    <fields>;
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+
+-keepclassmembers class * extends android.content.Context {
+   public void *(android.view.View);
+   public void *(android.view.MenuItem);
 }
+
+-keepclassmembers class * implements android.os.Parcelable {
+    static ** CREATOR;
+}
+
+-adaptresourcefilenames    **.properties,**.gif,**.jpg
+-adaptresourcefilecontents **.properties,META-INF/MANIFEST.MF
+
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}
+
+-assumenosideeffects class androidx.recyclerview.** { *; }
+-assumenosideeffects class com.google.android.material.chip.** { *; }
+-assumenosideeffects class com.google.android.material.floatingactionbutton.** { *; }
+-assumenosideeffects class com.google.android.material.bottomappbar.** { *; }
+-assumenosideeffects class com.google.android.material.card.** { *; }
+-assumenosideeffects class com.google.android.material.circularreveal.** { *; }
+-assumenosideeffects class com.google.android.material.snackbar.** { *; }
+

@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
 
 def secretsPropertiesFile = rootProject.file("secrets.properties")
 def secretProperties = new Properties()
@@ -18,18 +18,16 @@ else {
 
 
 android {
-    viewBinding {
-        enabled = true
-    }
+    buildFeatures.viewBinding = true
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.javinator9889.calculator"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 29
-        versionCode 12
-        versionName "1.0.4"
+        versionCode 16
+        versionName "1.0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -47,7 +45,7 @@ android {
             ext.enableCrashliytics = false
             versionNameSuffix "-debug"
             debuggable true
-            multiDexEnabled = true
+            multiDexEnabled true
         }
         beta {
             initWith(debug)
@@ -56,12 +54,13 @@ android {
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            multiDexEnabled = true
+            multiDexEnabled true
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            multiDexEnabled = true
+            multiDexEnabled true
+            shrinkResources true
             signingConfig signingConfigs.release
             versionNameSuffix "-stable"
 
@@ -91,32 +90,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    // https://material.io/develop/android/docs/getting-started/
-    implementation 'com.google.android.material:material:1.1.0'
-    // https://developer.android.com/jetpack/androidx/releases/annotation
-    implementation 'androidx.annotation:annotation:1.1.0'
-    // https://developer.android.com/kotlin/ktx#collection
-    implementation 'androidx.collection:collection-ktx:1.1.0'
     // https://developer.android.com/kotlin/ktx#lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
     // https://developer.android.com/kotlin/ktx#viewmodel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    // https://developer.android.com/kotlin/ktx#fragment
-    implementation 'androidx.fragment:fragment-ktx:1.2.4'
     // https://developer.android.com/kotlin/ktx#livedata
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     // https://github.com/JakeWharton/timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
     // https://developer.android.com/jetpack/androidx/releases/lifecycle#declaring_dependencies
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0'
-    // https://mvnrepository.com/artifact/org.mariuszgromada.math/MathParser.org-mXparser
-    implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.4.2'
-    // https://developers.google.com/android/guides/opensource
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
-    // https://firebase.google.com/docs/analytics
+    implementation files("libs/arity-2.1.7.jar")
     // https://firebase.google.com/docs/android/setup#add-sdks
-    api 'com.google.firebase:firebase-common-ktx:19.3.0'
-    api 'com.google.firebase:firebase-analytics:17.4.3'
-    api 'com.google.firebase:firebase-crashlytics:17.0.1'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
 }
-apply plugin: 'com.google.gms.google-services'

@@ -27,8 +27,9 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import androidx.core.view.ViewCompat
 import com.javinator9889.calculator.R
+import com.javinator9889.calculator.utils.dpToPixel
 
 abstract class ActionBarBase : AppCompatActivity() {
     @get:LayoutRes
@@ -41,6 +42,7 @@ abstract class ActionBarBase : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
         setSupportActionBar(findViewById(R.id.topAppBar))
+        ViewCompat.setElevation(findViewById(R.id.topAppBar), dpToPixel(2F, this))
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -56,12 +58,12 @@ abstract class ActionBarBase : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        OssLicensesMenuActivity.setActivityTitle(getString(R.string.app_name))
+//        OssLicensesMenuActivity.setActivityTitle(getString(R.string.app_name))
         return when (item.itemId) {
-            R.id.libs -> with(Intent(this, OssLicensesMenuActivity::class.java)) {
+            /*R.id.libs -> with(Intent(this, OssLicensesMenuActivity::class.java)) {
                 startActivity(this)
                 true
-            }
+            }*/
             R.id.github -> {
                 val website = Uri.parse("https://gitlab.javinator9889.com/Javinator9889/calculator")
                 with(Intent(Intent.ACTION_VIEW, website)) {

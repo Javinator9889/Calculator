@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
 
 def secretsPropertiesFile = rootProject.file("secrets.properties")
 def secretProperties = new Properties()
@@ -23,9 +24,9 @@ android {
 
     defaultConfig {
         applicationId "com.javinator9889.calculator"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 29
-        versionCode 15
+        versionCode 16
         versionName "1.0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -44,7 +45,7 @@ android {
             ext.enableCrashliytics = false
             versionNameSuffix "-debug"
             debuggable true
-            multiDexEnabled = true
+            multiDexEnabled true
         }
         beta {
             initWith(debug)
@@ -53,7 +54,7 @@ android {
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            multiDexEnabled = true
+            multiDexEnabled true
         }
         release {
             minifyEnabled true
@@ -103,4 +104,3 @@ dependencies {
     // https://firebase.google.com/docs/android/setup#add-sdks
     implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
 }
-apply plugin: 'com.google.gms.google-services'

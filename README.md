@@ -24,3 +24,5 @@ If you would like to install and use the application, download it from Gitlab re
 https://gitlab.javinator9889.com/Javinator9889/calculator/-/releases
 
 or download from Play Store:
+
+<a href='https://play.google.com/store/apps/details?id=com.javinator9889.calculator&utm_source=gitlab&utm_campaign=app&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>

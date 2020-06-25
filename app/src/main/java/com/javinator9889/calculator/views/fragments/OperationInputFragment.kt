@@ -14,157 +14,100 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 5/06/20 - Calculator.
+ * Created by Javinator9889 on 25/06/20 - Calculator.
  */
-package com.javinator9889.calculator.views.activities
+package com.javinator9889.calculator.views.fragments
 
 import android.animation.*
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.os.Vibrator
 import android.text.TextUtils
 import android.text.method.ScrollingMovementMethod
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenCreated
+import androidx.lifecycle.observe
 import com.javinator9889.calculator.R
 import com.javinator9889.calculator.models.ButtonBinder
 import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
 import com.javinator9889.calculator.models.viewmodels.factory.ViewModelFactory
+import com.javinator9889.calculator.utils.activityViewModels
 import com.javinator9889.calculator.utils.disableKeyboard
-import com.javinator9889.calculator.utils.notNull
-import com.javinator9889.calculator.utils.viewModels
-import com.javinator9889.calculator.views.activities.base.ActionBarBase
+import com.javinator9889.calculator.views.activities.ARG_CURRENT_RESULT_TEXT
+import com.javinator9889.calculator.views.activities.ARG_OPERATION_TEXT
 import com.javinator9889.calculator.views.widgets.CalculatorEditText
 import kotlinx.android.synthetic.main.calc_layout.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
-
-/**
- * Bundle key for saving the current displayed operation text
- */
-internal const val ARG_OPERATION_TEXT = "args:calculator:operation_text"
-
-/**
- * Bundle key for saving the current displayed operation result
- */
-internal const val ARG_CURRENT_RESULT_TEXT = "args:calculator:operation_result"
-
-
-/**
- * Main application activity. This class encapsulates the behaviour that must be shown
- * to the users. It consists on some different parts:
- *  - The {@link com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel CalculatorViewModel}
- *  which contains the application logic: it has relationships between buttons and actions that must
- *  take place.
- *  - The LifecycleScope part, responsible for launching coroutines for managing the input data and
- *  elements of the UI.
- *
- * When the activity is created, it waits until the lifecycle status has reached the CREATED one
- * before initializing some variables (such as {@literal lateinit var binder}) and start observing
- * the view models' live data.
- *
- * @see com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
- */
-class Calculator : ActionBarBase(), CalculatorEditText.OnTextSizeChangeListener {
-    override val layoutId: Int = R.layout.calc_layout
-    override val menuRes: Int = R.menu.app_menu
+class OperationInputFragment : Fragment(), CalculatorEditText.OnTextSizeChangeListener {
     private lateinit var binder: ButtonBinder
     private var currentAnimator: Animator? = null
-    private val calculatorViewModel: CalculatorViewModel by viewModels {
-        ViewModelFactory(CalculatorViewModel.Factory, this)
+    private val calculatorViewModel: CalculatorViewModel by activityViewModels {
+        ViewModelFactory(CalculatorViewModel.Factory, requireActivity())
     }
 
     init {
-        lifecycleScope.launch(context = Dispatchers.Main) {
-            whenCreated {
-                calculatorViewModel.currentOperation.observe(this@Calculator, Observer {
-                    Timber.d("COP updated - $it")
-                    operation.setText(it)
-                    operation.setSelection(operation.length())
-                    if (it != "")
-                        operation.requestFocus()
-                    else
-                        operation.clearFocus()
-                })
-                calculatorViewModel.operationResult.observe(this@Calculator, Observer {
-                    Timber.d("OP result updated - $it")
-                    if (it != "NaN") {
-                        operation.error = null
-                        currentResult.setText(it)
-                    }
-                })
-                calculatorViewModel.equalsResult.observe(this@Calculator, Observer {
-                    Timber.d("EQ pressed - $it")
-                    if (it == "NaN") {
-                        operation.error = getString(R.string.error_expression)
-                        operation.setSelection(operation.length())
-                        return@Observer
-                    }
+        lifecycleScope.launchWhenCreated {
+            calculatorViewModel.currentOperation.observe(this@OperationInputFragment) {
+                Timber.d("COP updated - $it")
+                operation.setText(it)
+                operation.setSelection(operation.length())
+                if (it != "")
+                    operation.requestFocus()
+                else
+                    operation.clearFocus()
+            }
+            calculatorViewModel.operationResult.observe(this@OperationInputFragment) {
+                Timber.d("OP result updated - $it")
+                if (it != "NaN") {
                     operation.error = null
-                    onResult(it)
-                })
-                Timber.d("Setting values")
-                binder = ButtonBinder(
-                    container = container,
-                    model = calculatorViewModel,
-                    lifecycleOwner = this@Calculator,
-                    vibrationService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                )
-                operation.movementMethod = ScrollingMovementMethod()
-                operation.setSelection(0)
+                    currentResult.setText(it)
+                }
+            }
+            calculatorViewModel.equalsResult.observe(this@OperationInputFragment) {
+                Timber.d("EQ pressed - $it")
+                if (it == "NaN") {
+                    operation.error = getString(R.string.error_expression)
+                    operation.setSelection(operation.length())
+                    return@observe
+                }
                 operation.error = null
-//                disableEditTextKeyboard()
-                operation.disableKeyboard()
-                operation.isCursorVisible = true
-                operation.requestFocus()
-                operation.setOnTextSizeChangeListener(this@Calculator)
+                onResult(it)
             }
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.calc_layout, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        operation.movementMethod = ScrollingMovementMethod()
+        operation.setSelection(0)
+        operation.error = null
+        operation.disableKeyboard()
+        operation.isCursorVisible = true
+        operation.requestFocus()
+        operation.setOnTextSizeChangeListener(this)
+        savedInstanceState?.let {
+            operation.setText(it.getCharSequence(ARG_OPERATION_TEXT))
+            currentResult.setText(it.getCharSequence(ARG_CURRENT_RESULT_TEXT))
+            operation.setSelection(0)
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        currentAnimator.notNull {
-            it.end()
-        }
+        currentAnimator?.end()
         Timber.d("Saving instance - data: ${calculatorViewModel.currentOperation.value}")
         outState.putCharSequence(ARG_OPERATION_TEXT, calculatorViewModel.currentOperation.value)
         outState.putCharSequence(ARG_CURRENT_RESULT_TEXT, currentResult.text)
-    }
-
-    /**
-     * @inheritDoc
-     */
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        Timber.d("Restoring instance - op: ${savedInstanceState.getCharSequence(ARG_OPERATION_TEXT)}")
-        operation.setText(savedInstanceState.getCharSequence(ARG_OPERATION_TEXT))
-        currentResult.setText(savedInstanceState.getCharSequence(ARG_CURRENT_RESULT_TEXT))
-        operation.setSelection(0)
-    }
-
-    /**
-     * @inheritDoc
-     */
-    override fun finish() {
-        super.finish()
-        calculatorViewModel.finish()
-    }
-
-    override fun onUserInteraction() {
-        super.onUserInteraction()
-        currentAnimator?.end()
     }
 
     override fun onTextSizeChanged(textView: TextView, oldSize: Float) {
@@ -183,18 +126,6 @@ class Calculator : ActionBarBase(), CalculatorEditText.OnTextSizeChangeListener 
             resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
         animatorSet.interpolator = AccelerateDecelerateInterpolator()
         animatorSet.start()
-    }
-
-    override fun onHistoryPressed() {
-        TODO("Not yet implemented")
-    }
-
-    private fun disableEditTextKeyboard() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            operation.showSoftInputOnFocus = false
-        else with(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {
-            hideSoftInputFromWindow(operation.windowToken, 0)
-        }
     }
 
     private fun onResult(result: String) {

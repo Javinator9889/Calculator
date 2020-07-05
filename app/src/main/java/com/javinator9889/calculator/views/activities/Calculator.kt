@@ -18,9 +18,12 @@
  */
 package com.javinator9889.calculator.views.activities
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.javinator9889.calculator.R
+import com.javinator9889.calculator.models.ButtonActionList
 import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
 import com.javinator9889.calculator.models.viewmodels.factory.ViewModelFactory
 import com.javinator9889.calculator.utils.viewModels
@@ -102,6 +105,24 @@ class Calculator : ActionBarBase() {
     }
 
     override fun onHistoryPressed() {
-        TODO("Not yet implemented")
+        with(Intent(this, HistoryActivity::class.java)) {
+            startActivityForResult(this, ARG_HISTORY_CODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            ARG_HISTORY_CODE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val operation =
+                        data?.getParcelableExtra<ButtonActionList>(ARG_OPERATION)
+                    if (!operation.isNullOrEmpty()) {
+                        calculatorViewModel.operands = operation
+                        calculatorViewModel.operate()
+                    }
+                }
+            }
+        }
     }
 }

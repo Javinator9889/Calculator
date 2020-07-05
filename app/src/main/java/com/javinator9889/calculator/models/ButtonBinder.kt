@@ -104,16 +104,16 @@ class ButtonBinder(
             R.id.btn_0,
             R.id.btn_decimal,
             R.id.btn_plus,
-            R.id.btn_equals -> bindButton(view as Button, view.text, view.text)
+            R.id.btn_equals -> bindButton(view as Button, view.text as String, view.text as String)
             R.id.btn_ln,
             R.id.btn_sin,
             R.id.btn_cos,
             R.id.btn_tan -> bindButton(view as Button, "${view.text}(", "${view.text}(")
             R.id.btn_root -> bindButton(view as Button, "sqrt(", "${view.text}(")
             R.id.btn_log -> bindButton(view as Button, "${view.text}10(", "${view.text}(")
-            R.id.btn_divide -> bindButton(view as Button, "/", view.text)
-            R.id.btn_multiply -> bindButton(view as Button, "*", view.text)
-            R.id.btn_pi -> bindButton(view as Button, "pi", view.text)
+            R.id.btn_divide -> bindButton(view as Button, "/", view.text as String)
+            R.id.btn_multiply -> bindButton(view as Button, "*", view.text as String)
+            R.id.btn_pi -> bindButton(view as Button, "pi", view.text as String)
             else -> Timber.d("Unknown ID")
         }
 
@@ -130,7 +130,7 @@ class ButtonBinder(
         }
     }
 
-    private fun bindButton(view: Button, action: CharSequence, value: CharSequence) {
+    private fun bindButton(view: Button, action: String, value: String) {
         buttonActions[view.id] = ButtonAction(action, value)
         view.setOnClickListener(this)
     }

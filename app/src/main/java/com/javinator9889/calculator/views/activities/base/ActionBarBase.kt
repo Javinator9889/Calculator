@@ -28,6 +28,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import com.javinator9889.calculator.R
@@ -43,8 +44,10 @@ abstract class ActionBarBase : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
-        setSupportActionBar(findViewById(R.id.topAppBar))
-        ViewCompat.setElevation(findViewById(R.id.topAppBar), dpToPixel(2F, this))
+        findViewById<Toolbar>(R.id.topAppBar)?.let {
+            setSupportActionBar(it)
+            ViewCompat.setElevation(it, dpToPixel(2F, this))
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

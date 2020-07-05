@@ -105,5 +105,4 @@ dependencies {
     implementation files("libs/arity-2.1.7.jar")
     // https://firebase.google.com/docs/android/setup#add-sdks
     implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
-//    implementation "androidx.fragment:fragment-ktx:1.2.5"
 }

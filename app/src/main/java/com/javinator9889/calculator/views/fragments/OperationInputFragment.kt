@@ -19,14 +19,18 @@
 package com.javinator9889.calculator.views.fragments
 
 import android.animation.*
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
+import android.os.Vibrator
 import android.text.TextUtils
 import android.text.method.ScrollingMovementMethod
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
@@ -40,25 +44,36 @@ import com.javinator9889.calculator.views.activities.ARG_CURRENT_RESULT_TEXT
 import com.javinator9889.calculator.views.activities.ARG_OPERATION_TEXT
 import com.javinator9889.calculator.views.widgets.CalculatorEditText
 import kotlinx.android.synthetic.main.calc_layout.*
+import kotlinx.android.synthetic.main.calc_layout.view.*
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class OperationInputFragment : Fragment(), CalculatorEditText.OnTextSizeChangeListener {
     private lateinit var binder: ButtonBinder
     private var currentAnimator: Animator? = null
+    private val isFirstLaunch = AtomicBoolean(true)
     private val calculatorViewModel: CalculatorViewModel by activityViewModels {
         ViewModelFactory(CalculatorViewModel.Factory, requireActivity())
     }
 
     init {
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenStarted {
             calculatorViewModel.currentOperation.observe(this@OperationInputFragment) {
                 Timber.d("COP updated - $it")
-                operation.setText(it)
-                operation.setSelection(operation.length())
-                if (it != "")
+                if (it != "") {
                     operation.requestFocus()
-                else
+                    operation.setText(it)
+                    operation.setSelection(operation.length())
+                } else {
                     operation.clearFocus()
+                    if (!isFirstLaunch.compareAndSet(true, false))
+                        onClear()
+                }
+//                if (it != "") operation.requestFocus()
+//                else operation.clearFocus()
             }
             calculatorViewModel.operationResult.observe(this@OperationInputFragment) {
                 Timber.d("OP result updated - $it")
@@ -88,17 +103,23 @@ class OperationInputFragment : Fragment(), CalculatorEditText.OnTextSizeChangeLi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        operation.movementMethod = ScrollingMovementMethod()
-        operation.setSelection(0)
-        operation.error = null
-        operation.disableKeyboard()
-        operation.isCursorVisible = true
-        operation.requestFocus()
-        operation.setOnTextSizeChangeListener(this)
+        binder = ButtonBinder(
+            container = view.container,
+            model = calculatorViewModel,
+            lifecycleOwner = this,
+            vibrationService = view.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        )
+        view.operation.movementMethod = ScrollingMovementMethod()
+        view.operation.setSelection(0)
+        view.operation.error = null
+        view.operation.disableKeyboard()
+        view.operation.isCursorVisible = true
+        view.operation.requestFocus()
+        view.operation.setOnTextSizeChangeListener(this)
         savedInstanceState?.let {
-            operation.setText(it.getCharSequence(ARG_OPERATION_TEXT))
-            currentResult.setText(it.getCharSequence(ARG_CURRENT_RESULT_TEXT))
-            operation.setSelection(0)
+            view.operation.setText(it.getCharSequence(ARG_OPERATION_TEXT))
+            view.currentResult.setText(it.getCharSequence(ARG_CURRENT_RESULT_TEXT))
+            view.operation.setSelection(0)
         }
     }
 
@@ -188,6 +209,75 @@ class OperationInputFragment : Fragment(), CalculatorEditText.OnTextSizeChangeLi
             }
         })
 
+        currentAnimator = animatorSet
+        animatorSet.start()
+    }
+
+    private fun onClear() {
+        val sourceView = btn_reset
+        val colorRes = R.color.colorAccent
+        val groupOverlay =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                requireActivity().window.decorView.overlay as ViewGroupOverlay
+            else {
+                operation.setText("")
+                currentResult.setText("")
+                return
+            }
+        val displayRect = Rect()
+        resultContainer.getGlobalVisibleRect(displayRect)
+
+        val revealView = View(requireContext())
+        revealView.top = displayRect.top
+        revealView.left = displayRect.left
+        revealView.right = displayRect.right
+        revealView.bottom = displayRect.bottom
+        revealView.setBackgroundColor(ResourcesCompat.getColor(resources, colorRes, null))
+        groupOverlay.add(revealView)
+
+        val clearLocation = IntArray(2)
+        sourceView.getLocationInWindow(clearLocation)
+        clearLocation[0] += sourceView.width / 2
+        clearLocation[1] += sourceView.height / 2
+
+        val revealCenterX = clearLocation[0] - revealView.left
+        val revealCenterY = clearLocation[1] - revealView.top
+
+        val x12 = (revealView.left - revealCenterX).toDouble().pow(2)
+        val x22 = (revealView.right - revealCenterX).toDouble().pow(2)
+        val y2 = (revealView.bottom - revealCenterY).toDouble().pow(2)
+        val revealRadius = max(sqrt(x12 + y2), sqrt(x22 + y2)).toFloat()
+
+        val revealAnimator = ViewAnimationUtils.createCircularReveal(
+            revealView,
+            revealCenterX,
+            revealCenterY,
+            .0F,
+            revealRadius
+        )
+        revealAnimator.duration =
+            resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+
+        val alphaAnimator = ObjectAnimator.ofFloat(revealView, View.ALPHA, .0F)
+        alphaAnimator.duration =
+            resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
+        alphaAnimator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator?) {
+                operation.setText("")
+                currentResult.setText("")
+            }
+        })
+
+        val animatorSet = AnimatorSet()
+        animatorSet.play(revealAnimator).before(alphaAnimator)
+        animatorSet.interpolator = AccelerateDecelerateInterpolator()
+        animatorSet.addListener(object : AnimatorListenerAdapter() {
+            @SuppressLint("NewApi")
+            override fun onAnimationEnd(animation: Animator?) {
+                groupOverlay.remove(revealView)
+                currentAnimator = null
+            }
+        })
         currentAnimator = animatorSet
         animatorSet.start()
     }

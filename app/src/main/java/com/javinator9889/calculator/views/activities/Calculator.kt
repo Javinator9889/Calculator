@@ -18,16 +18,18 @@
  */
 package com.javinator9889.calculator.views.activities
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.javinator9889.calculator.R
-import com.javinator9889.calculator.models.ButtonActionList
+import com.javinator9889.calculator.containers.HistoryData
+import com.javinator9889.calculator.listeners.HistoryItemClickedListener
 import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
 import com.javinator9889.calculator.models.viewmodels.factory.ViewModelFactory
 import com.javinator9889.calculator.utils.viewModels
 import com.javinator9889.calculator.views.activities.base.ActionBarBase
+import com.javinator9889.calculator.views.fragments.HistoryFragment
 import com.javinator9889.calculator.views.fragments.OperationInputFragment
 
 
@@ -62,13 +64,22 @@ internal const val ARG_FRAGMENT_KEY = "args:calculator:fragment:operation"
  *
  * @see com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
  */
-class Calculator : ActionBarBase() {
+class Calculator : ActionBarBase(), HistoryItemClickedListener {
     override val layoutId: Int = R.layout.main_layout
     override val menuRes: Int = R.menu.app_menu
     private val calculatorViewModel: CalculatorViewModel by viewModels {
         ViewModelFactory(CalculatorViewModel.Factory, this)
     }
     private lateinit var calculatorFragment: Fragment
+
+    @LayoutRes
+    private var activeFragmentId: Int = R.layout.calc_layout
+        get() = synchronized(this) {
+            return@synchronized field
+        }
+        set(value) = synchronized(this) {
+            field = value
+        }
 
     /**
      * @inheritDoc
@@ -105,24 +116,42 @@ class Calculator : ActionBarBase() {
     }
 
     override fun onHistoryPressed() {
-        with(Intent(this, HistoryActivity::class.java)) {
-            startActivityForResult(this, ARG_HISTORY_CODE)
+        val historyFragment = HistoryFragment()
+        with(supportFragmentManager.beginTransaction()) {
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+            hide(calculatorFragment)
+            add(R.id.frameLayout, historyFragment)
+            disallowAddToBackStack()
+            activeFragmentId = R.layout.history_layout
+            toolbar?.menu?.findItem(R.id.history)?.isVisible = false
+            show(historyFragment)
+            commit()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            ARG_HISTORY_CODE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    val operation =
-                        data?.getParcelableExtra<ButtonActionList>(ARG_OPERATION)
-                    if (!operation.isNullOrEmpty()) {
-                        calculatorViewModel.operands = operation
-                        calculatorViewModel.operate()
-                    }
-                }
+    override fun onBackPressed() {
+        if (activeFragmentId == R.layout.calc_layout)
+            super.onBackPressed()
+        else {
+            with(supportFragmentManager.beginTransaction()) {
+                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                replace(R.id.frameLayout, calculatorFragment)
+                disallowAddToBackStack()
+                activeFragmentId = R.layout.calc_layout
+                toolbar?.menu?.findItem(R.id.history)?.isVisible = true
+                show(calculatorFragment)
+                commit()
             }
+        }
+    }
+
+    override fun onClick(item: HistoryData) {
+        if (activeFragmentId == R.layout.history_layout) {
+            calculatorViewModel.operands = item.operation
+            onBackPressed()
+            calculatorViewModel.operate()
         }
     }
 }

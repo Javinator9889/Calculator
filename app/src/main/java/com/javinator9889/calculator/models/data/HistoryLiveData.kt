@@ -19,11 +19,11 @@
 package com.javinator9889.calculator.models.data
 
 import android.content.Context
-import android.os.FileObserver.CLOSE_WRITE
+import android.os.FileObserver
 import androidx.lifecycle.LiveData
 import com.javinator9889.calculator.containers.HistoryData
 import com.javinator9889.calculator.libs.android.util.FileObserverProvider
-import com.javinator9889.calculator.listeners.OnFileChangedListener
+import com.javinator9889.calculator.listeners.FileChangedListener
 import com.javinator9889.calculator.views.activities.HISTORY_FILE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,31 +32,31 @@ import timber.log.Timber
 import java.io.*
 
 class HistoryLiveData(context: Context, private val scope: CoroutineScope) :
-    LiveData<List<HistoryData>>(), OnFileChangedListener {
+    LiveData<List<HistoryData>>(), FileChangedListener {
     private val file = File(context.cacheDir, HISTORY_FILE)
-    private val observer = FileObserverProvider.getObserver(file, this)
+    private val observer = FileObserverProvider.getObserver(file, this, FileObserver.MODIFY)
 
-    override fun onActive() = observer.startWatching()
+    override fun onActive() {
+        observer.startWatching(); onFileChanged(file, 0)
+    }
 
     override fun onInactive() = observer.stopWatching()
 
     override fun onFileChanged(file: File, mask: Int) {
-        Timber.d("File has changed! - ${this.file == file} ; ${mask == CLOSE_WRITE}")
-        if (file == this.file && mask == CLOSE_WRITE) {
+        Timber.d("File has changed! - ${this.file == file} ; $mask")
+        if (file == this.file && (mask == FileObserver.MODIFY || mask == 0) && file.exists()) {
             Timber.d("The file was updated")
             scope.launch(Dispatchers.IO) {
-                val historyData = mutableListOf<HistoryData>()
                 ObjectInputStream(FileInputStream(file)).use {
                     try {
-                        while (true) {
-                            val item = it.readObject() as HistoryData
-                            historyData.add(item)
-                        }
+                        val historyData = it.readObject() as MutableList<HistoryData>
+                        postValue(historyData)
                     } catch (_: EOFException) {
                     } catch (_: StreamCorruptedException) {
+                    } catch (err: Throwable) {
+                        Timber.w(err, "Error while recovering history data from file")
                     }
                 }
-                postValue(historyData)
             }
         }
     }

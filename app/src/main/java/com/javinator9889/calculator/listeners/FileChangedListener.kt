@@ -16,21 +16,10 @@
  *
  * Created by Javinator9889 on 12/07/20 - Calculator.
  */
-package com.javinator9889.calculator.libs.android.util
+package com.javinator9889.calculator.listeners
 
-import android.os.Build
-import android.os.FileObserver
-import com.javinator9889.calculator.listeners.FileChangedListener
 import java.io.File
 
-
-object FileObserverProvider {
-    fun getObserver(
-        file: File,
-        callback: FileChangedListener,
-        mask: Int = FileObserver.ALL_EVENTS
-    ) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        HistoryFileObserver(file, callback, mask)
-    else
-        OldHistoryFileObserver(file, callback, mask)
+interface FileChangedListener {
+    fun onFileChanged(file: File, mask: Int)
 }

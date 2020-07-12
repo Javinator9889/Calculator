@@ -27,10 +27,7 @@ import com.javinator9889.calculator.models.data.HistoryLiveData
 import com.javinator9889.calculator.views.activities.HISTORY_FILE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
-import java.io.NotActiveException
-import java.io.ObjectOutputStream
+import java.io.*
 import java.util.*
 
 
@@ -40,10 +37,17 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 
     fun insertNewOperation(operation: ButtonActionList) = viewModelScope.launch(Dispatchers.IO) {
         val file = File(context.cacheDir, HISTORY_FILE)
-        val append = file.exists()
-        ObjectOutputStream(FileOutputStream(file, append)).use {
-            val now = Calendar.getInstance().time
-            it.writeUnshared(HistoryData(operation, now))
+        val writtenValues = mutableListOf<HistoryData>()
+        if (file.exists()) {
+            ObjectInputStream(FileInputStream(file)).use {
+                val savedValues = it.readObject() as MutableList<HistoryData>
+                writtenValues.addAll(savedValues)
+            }
+        }
+        val now = Calendar.getInstance().time
+        writtenValues.add(HistoryData(operation, now))
+        ObjectOutputStream(FileOutputStream(file)).use {
+            it.writeObject(writtenValues)
             try {
                 it.writeFields()
             } catch (_: NotActiveException) {

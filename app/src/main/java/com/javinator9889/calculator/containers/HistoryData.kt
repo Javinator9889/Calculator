@@ -25,6 +25,11 @@ import java.io.Serializable
 import java.util.*
 
 /**
+ * The history file name common for the entire project
+ */
+internal const val HISTORY_FILE = "ops.history.dat"
+
+/**
  * Helper class for storing data inside a file for later recovering it.
  */
 data class HistoryData(val operation: ButtonActionList, val date: Date) : Serializable, Parcelable {

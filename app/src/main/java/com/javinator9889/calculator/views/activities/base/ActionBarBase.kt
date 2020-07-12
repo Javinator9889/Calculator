@@ -41,12 +41,15 @@ abstract class ActionBarBase : AppCompatActivity() {
     @get:MenuRes
     protected abstract val menuRes: Int
 
+    protected var toolbar: Toolbar? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
         findViewById<Toolbar>(R.id.topAppBar)?.let {
             setSupportActionBar(it)
             ViewCompat.setElevation(it, dpToPixel(2F, this))
+            toolbar = it
         }
     }
 

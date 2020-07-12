@@ -21,12 +21,15 @@ package com.javinator9889.calculator.libs.android.util
 import android.os.Build
 import android.os.FileObserver
 import androidx.annotation.RequiresApi
-import com.javinator9889.calculator.listeners.OnFileChangedListener
+import com.javinator9889.calculator.listeners.FileChangedListener
 import java.io.File
 
 @RequiresApi(Build.VERSION_CODES.Q)
-class HistoryFileObserver(private val file: File, private val callback: OnFileChangedListener) :
-    FileObserver(file) {
+class HistoryFileObserver(
+    private val file: File,
+    private val callback: FileChangedListener,
+    mask: Int = ALL_EVENTS
+) : FileObserver(file, mask) {
     override fun onEvent(event: Int, path: String?) {
         callback.onFileChanged(file, event)
     }

@@ -18,8 +18,8 @@
  */
 package com.javinator9889.calculator.listeners
 
-import java.io.File
+import com.javinator9889.calculator.containers.HistoryData
 
-interface OnFileChangedListener {
-    fun onFileChanged(file: File, mask: Int)
+interface HistoryItemClickedListener {
+    fun onClick(item: HistoryData)
 }

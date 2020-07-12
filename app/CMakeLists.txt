@@ -13,23 +13,13 @@ set(CMAKE_CXX_STANDARD 14)
 # Gradle automatically packages shared libraries with your APK.
 
 add_library( # Sets the name of the library.
-        exprtk-lib
+        fileobserver-lib
 
         # Sets the library as a shared library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        src/main/cpp/exprtk.cpp)
-add_library(
-        tinyexpr-lib
-        SHARED
-        src/main/cpp/tinyexpr/tinyexpr.c
-)
-add_library(
-        fparser-lib
-        SHARED
-        src/main/cpp/fparser/fparser.cc
-)
+        src/main/cpp/FileObserver.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -49,9 +39,10 @@ find_library( # Sets the name of the path variable.
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-        exprtk-lib
-        tinyexpr-lib
-        fparser-lib
+	fileobserver-lib
+#        exprtk-lib
+#        tinyexpr-lib
+#        fparser-lib
 
         # Links the target library to the log library
         # included in the NDK.

@@ -35,24 +35,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import com.javinator9889.calculator.R
+import com.javinator9889.calculator.containers.ButtonAction
 import com.javinator9889.calculator.models.ButtonBinder
 import com.javinator9889.calculator.models.viewmodels.calculator.CalculatorViewModel
 import com.javinator9889.calculator.models.viewmodels.factory.ViewModelFactory
+import com.javinator9889.calculator.models.viewmodels.history.HistoryViewModel
 import com.javinator9889.calculator.utils.activityViewModels
 import com.javinator9889.calculator.utils.disableKeyboard
 import com.javinator9889.calculator.views.activities.ARG_CURRENT_RESULT_TEXT
 import com.javinator9889.calculator.views.activities.ARG_OPERATION_TEXT
-import com.javinator9889.calculator.views.activities.HISTORY_FILE
 import com.javinator9889.calculator.views.widgets.CalculatorEditText
 import kotlinx.android.synthetic.main.calc_layout.*
 import kotlinx.android.synthetic.main.calc_layout.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.io.File
-import java.io.FileOutputStream
-import java.io.ObjectOutputStream
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.max
 import kotlin.math.pow
@@ -65,6 +60,7 @@ class OperationInputFragment : Fragment(), CalculatorEditText.OnTextSizeChangeLi
     private val calculatorViewModel: CalculatorViewModel by activityViewModels {
         ViewModelFactory(CalculatorViewModel.Factory, requireActivity())
     }
+    private val historyViewModel: HistoryViewModel by activityViewModels()
 
     init {
         lifecycleScope.launchWhenStarted {
@@ -79,8 +75,6 @@ class OperationInputFragment : Fragment(), CalculatorEditText.OnTextSizeChangeLi
                     if (!isFirstLaunch.compareAndSet(true, false))
                         onClear()
                 }
-//                if (it != "") operation.requestFocus()
-//                else operation.clearFocus()
             }
             calculatorViewModel.operationResult.observe(this@OperationInputFragment) {
                 Timber.d("OP result updated - $it")
@@ -97,19 +91,11 @@ class OperationInputFragment : Fragment(), CalculatorEditText.OnTextSizeChangeLi
                     return@observe
                 }
                 operation.error = null
-                lifecycleScope.launch {
-                    try {
-                        val file = File(requireContext().cacheDir, HISTORY_FILE)
-                        val append = file.exists()
-                        withContext(Dispatchers.IO) {
-                            ObjectOutputStream(FileOutputStream(file, append)).use { file ->
-                                file.writeObject(calculatorViewModel.operands)
-                            }
-                        }
-                    } catch (e: Throwable) {
-                        Timber.w(e, "Error while trying to modify history file")
-                    }
-                }
+                if (calculatorViewModel.operands.size == 1 &&
+                    calculatorViewModel.operands[0] == ButtonAction("", "")
+                )
+                    return@observe
+                historyViewModel.insertNewOperation(calculatorViewModel.operands)
                 onResult(it)
             }
         }

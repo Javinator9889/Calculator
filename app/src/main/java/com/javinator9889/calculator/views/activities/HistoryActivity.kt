@@ -22,20 +22,16 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import com.javinator9889.calculator.R
-import com.javinator9889.calculator.models.ButtonActionList
+import com.javinator9889.calculator.containers.HistoryData
+import com.javinator9889.calculator.models.viewmodels.history.HistoryViewModel
+import com.javinator9889.calculator.utils.viewModels
+import com.javinator9889.calculator.views.adapters.HistoryAdapter
 import kotlinx.android.synthetic.main.history_layout.*
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import timber.log.Timber
-import java.io.EOFException
-import java.io.File
-import java.io.FileInputStream
-import java.io.ObjectInputStream
 
 /**
  * Key for referencing / accessing the history file
@@ -60,32 +56,53 @@ internal const val ARG_HISTORY_KEY = "args:history:key"
 
 class HistoryActivity : AppCompatActivity() {
     private val isDataRecoverNeeded = CompletableDeferred<Boolean>()
-    private lateinit var historyData: List<ButtonActionList>
+    private val historyViewModel: HistoryViewModel by viewModels()
+    private lateinit var historyData: List<HistoryData>
 
     init {
         lifecycleScope.launchWhenCreated {
-            val data = if (isDataRecoverNeeded.await()) {
-                runCatching {
+            historyViewModel.historyData.observe(this@HistoryActivity) {
+//                for (action in it)
+                val adapter = HistoryAdapter(this@HistoryActivity, R.layout.history_item, it)
+                historyContainer.adapter = adapter
+                historyContainer.setOnItemClickListener { _, _, position, _ ->
+                    val item = it[position]
+                    val intent = Intent()
+                        .putExtra(ARG_OPERATION, item.operation as Parcelable)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
+            }
+        }
+        /*lifecycleScope.launchWhenCreated {
+            val data: List<HistoryData>?
+            if (isDataRecoverNeeded.await()) {
+                val historyData: MutableList<HistoryData> = mutableListOf()
+                try {
                     val historyFile = File(cacheDir, HISTORY_FILE)
-                    val historyData: MutableList<ButtonActionList> = mutableListOf()
-                    if (!historyFile.exists())
-                        return@runCatching null
-                    withContext(Dispatchers.IO) {
-                        ObjectInputStream(FileInputStream(historyFile)).use {
-                            try {
-                                while (true) {
-                                    val item = it.readObject() as ButtonActionList
-                                    historyData.add(item)
+                    if (historyFile.exists()) {
+                        withContext(Dispatchers.IO) {
+                            ObjectInputStream(FileInputStream(historyFile)).use {
+                                try {
+                                    while (true) {
+                                        val item = it.readObject() as HistoryData
+                                        Timber.d("Recovered $item")
+                                        historyData.add(item)
+                                    }
+                                } catch (_: EOFException) {
                                 }
-                            } catch (_: EOFException) {
                             }
                         }
                     }
-                    if (historyData.isNullOrEmpty()) null else historyData
-                }.getOrElse { Timber.w(it, "Error while recovering history"); null }
-            } else historyData
+                } catch (e: Throwable) {
+                    Timber.w(e, "Error while recovering history data")
+                } finally {
+                    data = if (historyData.isNullOrEmpty()) null else historyData
+                    Timber.d(data.toString())
+                }
+            } else data = historyData
             data?.let {
-                val operandsList = mutableListOf<CharSequence>()
+                /*val operandsList = mutableListOf<CharSequence>()
                 val outputList = mutableListOf<CharSequence>()
                 for (actionList in it) {
 //                    val listBuilder = StringBuilder(actionList.size)
@@ -101,27 +118,25 @@ class HistoryActivity : AppCompatActivity() {
                     )
 //                    operandsList.add(action.action)
 //                    outputList.add(action.value)
-                }
-                val adapter = ArrayAdapter<CharSequence>(
-                    this@HistoryActivity, android.R.layout.simple_list_item_1, operandsList
-                )
+                }*/
+                val adapter = HistoryAdapter(this@HistoryActivity, R.layout.history_item, it)
                 historyContainer.adapter = adapter
                 historyContainer.setOnItemClickListener { _, _, position, _ ->
                     val item = it[position]
                     val intent = Intent()
-                        .putExtra(ARG_OPERATION, item as Parcelable)
+                        .putExtra(ARG_OPERATION, item.operation as Parcelable)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
             }
-        }
+        }*/
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.history_layout)
         if (savedInstanceState != null) {
-            val data = savedInstanceState.getParcelableArrayList<ButtonActionList>(ARG_HISTORY_KEY)
+            val data = savedInstanceState.getParcelableArrayList<HistoryData>(ARG_HISTORY_KEY)
             if (data == null)
                 isDataRecoverNeeded.complete(true)
             else {

@@ -20,6 +20,16 @@ package com.javinator9889.calculator.listeners
 
 import java.io.File
 
+/**
+ * Listener that gets notified whether an observed file has changed.
+ */
 interface FileChangedListener {
+
+    /**
+     * The observed file changed
+     * @param file the file that changed
+     * @param mask the operation that was done with the file
+     * @see android.os.FileObserver
+     */
     fun onFileChanged(file: File, mask: Int)
 }

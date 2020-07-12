@@ -22,6 +22,10 @@ import android.os.FileObserver
 import com.javinator9889.calculator.listeners.FileChangedListener
 import java.io.File
 
+
+/**
+ * FileObserver for Android versions lower than Q
+ */
 class OldHistoryFileObserver(
     private val file: File,
     private val callback: FileChangedListener,

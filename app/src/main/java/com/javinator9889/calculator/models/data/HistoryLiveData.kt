@@ -21,27 +21,41 @@ package com.javinator9889.calculator.models.data
 import android.content.Context
 import android.os.FileObserver
 import androidx.lifecycle.LiveData
+import com.javinator9889.calculator.containers.HISTORY_FILE
 import com.javinator9889.calculator.containers.HistoryData
 import com.javinator9889.calculator.libs.android.util.FileObserverProvider
 import com.javinator9889.calculator.listeners.FileChangedListener
-import com.javinator9889.calculator.views.activities.HISTORY_FILE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.*
 
+
+/**
+ * LiveData class that listens for changes in the history file, for notifying the
+ * observers about that change.
+ */
 class HistoryLiveData(context: Context, private val scope: CoroutineScope) :
     LiveData<List<HistoryData>>(), FileChangedListener {
     private val file = File(context.cacheDir, HISTORY_FILE)
     private val observer = FileObserverProvider.getObserver(file, this, FileObserver.MODIFY)
 
+    /**
+     * {@inheritDoc}
+     */
     override fun onActive() {
         observer.startWatching(); onFileChanged(file, 0)
     }
 
+    /**
+     * {@inheritDoc}
+     */
     override fun onInactive() = observer.stopWatching()
 
+    /**
+     * {@inheritDoc}
+     */
     override fun onFileChanged(file: File, mask: Int) {
         Timber.d("File has changed! - ${this.file == file} ; $mask")
         if (file == this.file && (mask == FileObserver.MODIFY || mask == 0) && file.exists()) {

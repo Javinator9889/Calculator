@@ -24,6 +24,12 @@ import com.javinator9889.calculator.listeners.FileChangedListener
 import java.io.File
 
 
+/**
+ * Since Android Q, the FileObserver constructor changed and deprecated the other constructors
+ * not based on File {@link java.io.File}. This provider allows APIs below Android Q use the
+ * old constructor (@link android.os.FileObserver#FileObserver(String, int)} and the newer ones
+ * the constructor based on {@link java.io.File}.
+ */
 object FileObserverProvider {
     fun getObserver(
         file: File,

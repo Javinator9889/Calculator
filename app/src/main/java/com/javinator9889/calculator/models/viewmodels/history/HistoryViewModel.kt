@@ -21,20 +21,33 @@ package com.javinator9889.calculator.models.viewmodels.history
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.javinator9889.calculator.containers.HISTORY_FILE
 import com.javinator9889.calculator.containers.HistoryData
 import com.javinator9889.calculator.models.ButtonActionList
 import com.javinator9889.calculator.models.data.HistoryLiveData
-import com.javinator9889.calculator.views.activities.HISTORY_FILE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
 import java.util.*
 
 
+/**
+ * ViewModel for accessing the history data directly through it.
+ */
 class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     private val context = app.applicationContext
+
+    /**
+     * Exposed LiveData for being observed by another classes that provides to the user the
+     * operations' history.
+     */
     val historyData = HistoryLiveData(app.applicationContext, viewModelScope)
 
+    /**
+     * Updates the history model inserting a new operation.
+     *
+     * @param operation the operation to be added to the history.
+     */
     fun insertNewOperation(operation: ButtonActionList) = viewModelScope.launch(Dispatchers.IO) {
         val file = File(context.cacheDir, HISTORY_FILE)
         val writtenValues = mutableListOf<HistoryData>()

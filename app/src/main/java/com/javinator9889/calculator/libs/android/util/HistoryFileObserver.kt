@@ -24,6 +24,9 @@ import androidx.annotation.RequiresApi
 import com.javinator9889.calculator.listeners.FileChangedListener
 import java.io.File
 
+/**
+ * FileObserver for Android versions higher than Q
+ */
 @RequiresApi(Build.VERSION_CODES.Q)
 class HistoryFileObserver(
     private val file: File,

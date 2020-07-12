@@ -20,6 +20,15 @@ package com.javinator9889.calculator.listeners
 
 import com.javinator9889.calculator.containers.HistoryData
 
+/**
+ * Listener that gets notified when a history item was interacted (clicked).
+ */
 interface HistoryItemClickedListener {
+
+    /**
+     * A listener function that received the history item that was clicked.
+     *
+     * @param item the clicked item.
+     */
     fun onClick(item: HistoryData)
 }

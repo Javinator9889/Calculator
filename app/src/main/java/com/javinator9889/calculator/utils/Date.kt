@@ -21,6 +21,9 @@ package com.javinator9889.calculator.utils
 import java.text.DateFormat
 import java.util.*
 
+/**
+ * Gets the user formatted date in full mode
+ */
 val Date.userLocaleDate: String
     get() = with(DateFormat.getDateInstance(DateFormat.FULL)) {
         format(this@userLocaleDate)

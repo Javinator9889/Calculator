@@ -14,27 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 5/06/20 - Calculator.
+ * Created by Javinator9889 on 12/07/20 - Calculator.
  */
-package com.javinator9889.calculator.application
+package com.javinator9889.calculator.listeners
 
-import android.app.Application
-import com.javinator9889.calculator.BuildConfig
-import com.javinator9889.calculator.logger.CrashReportingTree
-import timber.log.Timber
+import java.io.File
 
 /**
- * Custom implementation of the application for using custom logging whether the build
- * is debug one or not.
+ * Listener that gets notified whether an observed file has changed.
  */
-class CalculatorApp : Application() {
-    /**
-     * @inheritDoc
-     */
-    override fun onCreate() {
-        super.onCreate()
+interface FileChangedListener {
 
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-        else Timber.plant(CrashReportingTree())
-    }
+    /**
+     * The observed file changed
+     * @param file the file that changed
+     * @param mask the operation that was done with the file
+     * @see android.os.FileObserver
+     */
+    fun onFileChanged(file: File, mask: Int)
 }

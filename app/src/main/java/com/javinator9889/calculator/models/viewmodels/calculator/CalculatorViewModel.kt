@@ -21,6 +21,7 @@ package com.javinator9889.calculator.models.viewmodels.calculator
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.*
 import com.javinator9889.calculator.containers.ButtonAction
+import com.javinator9889.calculator.models.ButtonActionList
 import com.javinator9889.calculator.models.viewmodels.factory.ViewModelAssistedFactory
 import com.javinator9889.calculator.utils.Calculator
 import com.javinator9889.calculator.utils.removeLast
@@ -66,9 +67,8 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
     val equalsResult: MutableLiveData<String> = savedStateHandle.getLiveData(ARG_EQUALS, "")
     val operatorLiveData: MutableLiveData<ButtonAction> =
         savedStateHandle.getLiveData(ARG_OPERATOR, ButtonAction("", ""))
-    private var operands: MutableList<ButtonAction> =
-        savedStateHandle.get<MutableList<ButtonAction>>(ARG_OPERANDS)
-            ?: mutableListOf()
+    internal var operands: ButtonActionList =
+        savedStateHandle.get<ButtonActionList>(ARG_OPERANDS) ?: ButtonActionList()
     private var equalsPressed = false
     private val observer: Observer<ButtonAction> = Observer { button ->
         when (button.action) {
@@ -113,33 +113,29 @@ class CalculatorViewModel(private val savedStateHandle: SavedStateHandle) : View
     /**
      * Notifies the view model that it must stop observing for data changes.
      */
-    fun finish() {
-        operatorLiveData.removeObserver(observer)
-    }
+    fun finish() = operatorLiveData.removeObserver(observer)
 
-    private fun operate() {
-        viewModelScope.launch {
-            val expression = StringBuilder(operands.size)
-            val operation = StringBuilder(operands.size)
-            operands.forEach { operand ->
-                expression.append(operand.action)
-                operation.append(operand.value)
-            }
-            Timber.d("Operation: $operation")
-            withContext(Dispatchers.Main) {
-                currentOperation.value = operation.toString()
-            }
-            with(Calculator.evaluate(expression.toString())) {
-                var calcResult = this
-                if (calcResult.endsWith(".0"))
-                    calcResult = calcResult.removeSuffix(".0")
-                withContext(Dispatchers.Main) {
-                    operationResult.value = calcResult
-                }
-                savedStateHandle.set(ARG_RESULT, calcResult)
-            }
-            savedStateHandle.set(ARG_COP, operation.toString())
+    internal fun operate() = viewModelScope.launch {
+        val expression = StringBuilder(operands.size)
+        val operation = StringBuilder(operands.size)
+        operands.forEach { operand ->
+            expression.append(operand.action)
+            operation.append(operand.value)
         }
+        Timber.d("Operation: $operation")
+        withContext(Dispatchers.Main) {
+            currentOperation.value = operation.toString()
+        }
+        with(Calculator.evaluate(expression.toString())) {
+            var calcResult = this
+            if (calcResult.endsWith(".0"))
+                calcResult = calcResult.removeSuffix(".0")
+            withContext(Dispatchers.Main) {
+                operationResult.value = calcResult
+            }
+            savedStateHandle.set(ARG_RESULT, calcResult)
+        }
+        savedStateHandle.set(ARG_COP, operation.toString())
     }
 
     private fun validateInput(): Boolean {

@@ -14,27 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 5/06/20 - Calculator.
+ * Created by Javinator9889 on 25/06/20 - Calculator.
  */
-package com.javinator9889.calculator.application
+package com.javinator9889.calculator.utils
 
-import android.app.Application
-import com.javinator9889.calculator.BuildConfig
-import com.javinator9889.calculator.logger.CrashReportingTree
-import timber.log.Timber
+import android.content.Context
+import android.os.Build
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 
-/**
- * Custom implementation of the application for using custom logging whether the build
- * is debug one or not.
- */
-class CalculatorApp : Application() {
-    /**
-     * @inheritDoc
-     */
-    override fun onCreate() {
-        super.onCreate()
-
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-        else Timber.plant(CrashReportingTree())
+fun EditText.disableKeyboard() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        this.showSoftInputOnFocus = false
+    else with(context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {
+        hideSoftInputFromWindow(this@disableKeyboard.windowToken, 0)
     }
 }

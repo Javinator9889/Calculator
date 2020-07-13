@@ -3,12 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/history"
+        android:checkable="false"
+        android:contentDescription="@string/history"
+        android:enabled="true"
+        android:title="@string/history"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/github"
         android:checkable="false"
         android:contentDescription="@string/github"
         android:enabled="true"
-        android:icon="@drawable/ic_github"
         android:title="@string/github"
         android:visible="true"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>

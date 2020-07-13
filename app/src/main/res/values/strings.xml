@@ -4,5 +4,6 @@
     <string name="error_expression">Error in expression</string>
     <string name="libs">Open source libraries</string>
     <string name="github">Github</string>
+    <string name="history">History</string>
     <string name="no_browser">It seems like you have no browser installed</string>
 </resources>

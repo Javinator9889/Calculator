@@ -20,6 +20,7 @@ package com.javinator9889.calculator.containers
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.io.Serializable
 
 /**
  * Data class that stores a button action and its value. In particular, this is how it works:
@@ -33,15 +34,15 @@ import android.os.Parcelable
  *  @param action how the operation is represented in mXparser.
  *  @param value how the operation is represented on screen.
  */
-data class ButtonAction(val action: CharSequence, val value: CharSequence) : Parcelable {
+data class ButtonAction(val action: String, val value: String) : Parcelable, Serializable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(action.toString())
-        parcel.writeString(value.toString())
+        parcel.writeString(action)
+        parcel.writeString(value)
     }
 
     override fun describeContents() = 0

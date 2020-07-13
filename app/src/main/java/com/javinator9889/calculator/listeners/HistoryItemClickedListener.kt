@@ -14,27 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 5/06/20 - Calculator.
+ * Created by Javinator9889 on 12/07/20 - Calculator.
  */
-package com.javinator9889.calculator.application
+package com.javinator9889.calculator.listeners
 
-import android.app.Application
-import com.javinator9889.calculator.BuildConfig
-import com.javinator9889.calculator.logger.CrashReportingTree
-import timber.log.Timber
+import com.javinator9889.calculator.containers.HistoryData
 
 /**
- * Custom implementation of the application for using custom logging whether the build
- * is debug one or not.
+ * Listener that gets notified when a history item was interacted (clicked).
  */
-class CalculatorApp : Application() {
-    /**
-     * @inheritDoc
-     */
-    override fun onCreate() {
-        super.onCreate()
+interface HistoryItemClickedListener {
 
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-        else Timber.plant(CrashReportingTree())
-    }
+    /**
+     * A listener function that received the history item that was clicked.
+     *
+     * @param item the clicked item.
+     */
+    fun onClick(item: HistoryData)
 }

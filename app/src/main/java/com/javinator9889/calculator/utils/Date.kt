@@ -14,27 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  *
- * Created by Javinator9889 on 5/06/20 - Calculator.
+ * Created by Javinator9889 on 11/07/20 - Calculator.
  */
-package com.javinator9889.calculator.application
+package com.javinator9889.calculator.utils
 
-import android.app.Application
-import com.javinator9889.calculator.BuildConfig
-import com.javinator9889.calculator.logger.CrashReportingTree
-import timber.log.Timber
+import java.text.DateFormat
+import java.util.*
 
 /**
- * Custom implementation of the application for using custom logging whether the build
- * is debug one or not.
+ * Gets the user formatted date in full mode
  */
-class CalculatorApp : Application() {
-    /**
-     * @inheritDoc
-     */
-    override fun onCreate() {
-        super.onCreate()
-
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-        else Timber.plant(CrashReportingTree())
+val Date.userLocaleDate: String
+    get() = with(DateFormat.getDateInstance(DateFormat.FULL)) {
+        format(this@userLocaleDate)
     }
-}

@@ -27,6 +27,9 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import com.javinator9889.calculator.R
 import com.javinator9889.calculator.utils.dpToPixel
@@ -38,11 +41,16 @@ abstract class ActionBarBase : AppCompatActivity() {
     @get:MenuRes
     protected abstract val menuRes: Int
 
+    protected var toolbar: Toolbar? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
-        setSupportActionBar(findViewById(R.id.topAppBar))
-        ViewCompat.setElevation(findViewById(R.id.topAppBar), dpToPixel(2F, this))
+        findViewById<Toolbar>(R.id.topAppBar)?.let {
+            setSupportActionBar(it)
+            ViewCompat.setElevation(it, dpToPixel(2F, this))
+            toolbar = it
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -54,16 +62,17 @@ abstract class ActionBarBase : AppCompatActivity() {
         with(menuInflater) {
             inflate(menuRes, menu)
         }
+        with(DrawableCompat.wrap(AppCompatResources.getDrawable(this, R.drawable.ic_github)!!)) {
+            menu?.findItem(R.id.github)?.icon = this
+        }
+        with(DrawableCompat.wrap(AppCompatResources.getDrawable(this, R.drawable.ic_history)!!)) {
+            menu?.findItem(R.id.history)?.icon = this
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        OssLicensesMenuActivity.setActivityTitle(getString(R.string.app_name))
         return when (item.itemId) {
-            /*R.id.libs -> with(Intent(this, OssLicensesMenuActivity::class.java)) {
-                startActivity(this)
-                true
-            }*/
             R.id.github -> {
                 val website = Uri.parse("https://gitlab.javinator9889.com/Javinator9889/calculator")
                 with(Intent(Intent.ACTION_VIEW, website)) {
@@ -76,7 +85,13 @@ abstract class ActionBarBase : AppCompatActivity() {
                 }
                 true
             }
+            R.id.history -> {
+                onHistoryPressed()
+                true
+            }
             else -> false
         }
     }
+
+    abstract fun onHistoryPressed()
 }

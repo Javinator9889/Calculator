@@ -8,27 +8,15 @@
     android:background="@android:color/white"
     tools:context=".views.activities.Calculator">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/topAppBar"
-        style="@style/actionBarTheme"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/resultContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/app_menu"
-        app:title="@string/app_name" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/resultContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topAppBar">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <com.javinator9889.calculator.views.widgets.CalculatorEditText
@@ -38,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:background="@android:color/transparent"
@@ -49,10 +36,10 @@
             android:gravity="center_vertical|end"
             android:hint="@string/operation"
             android:inputType="text|textNoSuggestions"
-            android:minHeight="75dp"
+            android:minHeight="100dp"
             android:textColor="@color/display_formula_text_color"
-            android:textSize="32sp"
-            app:layout_constraintBottom_toTopOf="@+id/currentResult"
+            android:textSize="44sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -70,12 +57,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="here will be the current result" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/buttonLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"

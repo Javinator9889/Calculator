@@ -35,7 +35,7 @@ import java.util.*
  * ViewModel for accessing the history data directly through it.
  */
 class HistoryViewModel(app: Application) : AndroidViewModel(app) {
-    private val context = app.applicationContext
+    private val cacheDir = app.applicationContext.cacheDir
 
     /**
      * Exposed LiveData for being observed by another classes that provides to the user the
@@ -49,7 +49,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
      * @param operation the operation to be added to the history.
      */
     fun insertNewOperation(operation: ButtonActionList) = viewModelScope.launch(Dispatchers.IO) {
-        val file = File(context.cacheDir, HISTORY_FILE)
+        val file = File(cacheDir, HISTORY_FILE)
         val writtenValues = mutableListOf<HistoryData>()
         if (file.exists()) {
             ObjectInputStream(FileInputStream(file)).use {

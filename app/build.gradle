@@ -26,7 +26,7 @@ android {
         applicationId "com.javinator9889.calculator"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 20
+        versionCode 25
         versionName "1.1.0"
         resConfigs 'en', 'es'
         vectorDrawables.useSupportLibrary = true

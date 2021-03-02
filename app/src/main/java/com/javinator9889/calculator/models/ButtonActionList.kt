@@ -22,11 +22,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.javinator9889.calculator.containers.ButtonAction
 
-class ButtonActionList : ArrayList<ButtonAction>, Parcelable {
-    constructor() : super()
-    constructor(size: Int) : super(size)
-    constructor(collection: Collection<ButtonAction>) : super(collection)
-
+class ButtonActionList(size: Int = 10) : ArrayList<ButtonAction>(size), Parcelable {
     constructor(parcel: Parcel) : this() {
         parcel.readTypedList(this, ButtonAction.CREATOR)
     }

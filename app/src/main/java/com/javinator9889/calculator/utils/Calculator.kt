@@ -22,8 +22,8 @@ import org.javia.arity.Symbols
 import org.javia.arity.SyntaxException
 import org.javia.arity.Util
 
-internal const val MAX_DIGITS = 12;
-internal const val ROUNDING_DIGITS = 5;
+internal const val MAX_DIGITS = 12
+internal const val ROUNDING_DIGITS = 5
 
 object Calculator {
     fun evaluate(input: String): String {
@@ -35,7 +35,7 @@ object Calculator {
             val result = symbols.eval(expression)
             if (result.isNaN())
                 return "NaN"
-            return Util.doubleToString(result, MAX_DIGITS, ROUNDING_DIGITS);
+            return Util.doubleToString(result, MAX_DIGITS, ROUNDING_DIGITS)
         } catch (e: SyntaxException) {
             return "NaN"
         }

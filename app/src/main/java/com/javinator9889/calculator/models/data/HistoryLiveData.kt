@@ -56,6 +56,7 @@ class HistoryLiveData(context: Context, private val scope: CoroutineScope) :
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     override fun onFileChanged(file: File, mask: Int) {
         Timber.d("File has changed! - ${this.file == file} ; $mask")
         if (file == this.file && (mask == FileObserver.MODIFY || mask == 0) && file.exists()) {

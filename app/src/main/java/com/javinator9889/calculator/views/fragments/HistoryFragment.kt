@@ -24,7 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import com.javinator9889.calculator.R
 import com.javinator9889.calculator.listeners.HistoryItemClickedListener
 import com.javinator9889.calculator.models.viewmodels.history.HistoryViewModel

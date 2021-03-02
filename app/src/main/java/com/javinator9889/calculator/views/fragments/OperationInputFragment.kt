@@ -33,7 +33,6 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import com.javinator9889.calculator.R
 import com.javinator9889.calculator.containers.ButtonAction
 import com.javinator9889.calculator.models.ButtonBinder

@@ -48,6 +48,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
      *
      * @param operation the operation to be added to the history.
      */
+    @SuppressWarnings("unchecked")
     fun insertNewOperation(operation: ButtonActionList) = viewModelScope.launch(Dispatchers.IO) {
         val file = File(cacheDir, HISTORY_FILE)
         val writtenValues = mutableListOf<HistoryData>()

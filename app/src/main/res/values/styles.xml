@@ -7,16 +7,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="CalcOperationButton" parent="@style/CalcButton">
-        <item name="background">@color/colorPrimary</item>
-        <item name="android:background">@color/colorPrimary</item>
-        <!--        <item name="rippleColor">@android:color/black</item>-->
-    </style>
-
-    <style name="OperationButton">
-        <item name="colorPrimary">@color/colorPrimary</item>
-    </style>
-
     <style name="actionBarTheme" parent="Widget.AppCompat.Light.ActionBar">
         <item name="android:fontFamily">@font/roboto</item>
         <item name="titleTextColor">#000000</item>

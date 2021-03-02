@@ -74,7 +74,7 @@ abstract class ActionBarBase : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.github -> {
-                val website = Uri.parse("https://gitlab.javinator9889.com/Javinator9889/calculator")
+                val website = Uri.parse("https://github.com/Javinator9889/calculator")
                 with(Intent(Intent.ACTION_VIEW, website)) {
                     if (resolveActivity(this@ActionBarBase.packageManager) != null)
                         startActivity(this)

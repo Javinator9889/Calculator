@@ -3,7 +3,6 @@
     <string name="app_name">Calculadora</string>
     <string name="operation">Operación…</string>
     <string name="error_expression">Error en la expresión</string>
-    <string name="libs">Librerías de código abierto</string>
     <string name="github">Github</string>
     <string name="history">Historial</string>
     <string name="no_browser">Parece que no tienes ningún navegador instalado</string>

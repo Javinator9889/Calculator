@@ -81,7 +81,7 @@ class CalculatorEditText(context: Context, attrs: AttributeSet?, defStyle: Int) 
             // Hack to prevent keyboard and insertion handle from showing.
             cancelLongPress()
         }
-        return super.onTouchEvent(event)
+        return runCatching { super.onTouchEvent(event) }.getOrDefault(false)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
